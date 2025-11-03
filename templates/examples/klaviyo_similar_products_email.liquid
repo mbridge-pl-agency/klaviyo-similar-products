@@ -13,6 +13,7 @@
 
 <div style="display:table;width:100%;height:100%" class="kl-product">
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'0' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'0' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -24,7 +25,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -87,7 +88,9 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'1' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'1' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -99,7 +102,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -162,11 +165,13 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
 </div>
 
 <div style="display:table;width:100%;height:100%" class="kl-product">
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'2' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'2' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -178,7 +183,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -241,7 +246,9 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'3' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'3' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -253,7 +260,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -316,11 +323,13 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
 </div>
 
 <div style="display:table;width:100%;height:100%" class="kl-product">
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'4' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'4' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -332,7 +341,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -395,7 +404,9 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
+{% if person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'5' %}
 {% catalog person.bis_similar_products|lookup:'0'|lookup:'similar_ids'|lookup:'5' integration='prestashop' catalog_id="1:2" %}
 <!--[if !true]><!--><div style="display:table-cell;vertical-align:top;font-size:0;width:50%;"><!--<![endif]-->
 <table width="100%" style="" role="presentation" height="100%" cellspacing="0" cellpadding="0">
@@ -407,7 +418,7 @@
 <tr>
 <td align="center">
 <a href="{{ catalog_item.url }}" style="color:#A8A8A8;text-decoration:underline" target="_blank" rel="noopener">
-<img width="176" style="display:block;max-width:100%;width:auto;max-height:125px;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
+<img width="176" style="display:block;max-width:100%;height:auto;" src="{{ catalog_item.featured_image.full.src }}" alt="Image of {{ catalog_item.title }}">
 </a>
 </td>
 </tr>
@@ -470,6 +481,7 @@
 </table>
 <!--[if !true]><!--></div><!--<![endif]-->
 {% endcatalog %}
+{% endif %}
 
 </div>
 
