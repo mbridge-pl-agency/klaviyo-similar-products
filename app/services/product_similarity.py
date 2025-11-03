@@ -35,34 +35,46 @@ STOP_WORDS = {
 }
 
 
-def calculate_product_similarity(original: Product, candidate: Product) -> float:
+def calculate_similarity_with_context(
+    original: Product,
+    candidate: Product,
+    all_products: List[Product]
+) -> float:
     """
-    Calculate comprehensive similarity score between two products.
+    Calculate comprehensive similarity score between two products using BM25.
 
-    Returns score from 0.0 to 1.0, where 1.0 = perfect substitute.
+    This is the main scoring function combining multiple factors:
+    - 60% Name similarity (BM25 with context from all_products corpus)
+    - 30% Price proximity (similar price point = similar product segment)
+    - 10% Manufacturer match (nice bonus, but not decisive)
 
-    Scoring weights:
-    - 60% Name similarity (most important - "cookies" should match "cookies")
-    - 30% Price proximity (similar price = similar product segment)
-    - 10% Manufacturer bonus (nice to have, but not decisive)
+    BM25 advantages over TF-IDF:
+    - Saturation: Repeated words have diminishing returns (realistic!)
+    - Length normalization: Fair comparison between short/long product names
+    - Industry standard: Used by Elasticsearch, Lucene, major search engines
+    - Higher weight for unique/rare words ("keto", "cookies")
+    - Lower weight for common words ("gluten-free", "mix")
 
     Args:
         original: Product user subscribed to (out of stock)
         candidate: Potential substitute product (in stock)
+        all_products: All products in category (used for BM25 IDF calculation)
 
     Returns:
-        Similarity score (0.0 - 1.0)
+        Similarity score (0.0 - 1.0), where 1.0 = perfect substitute
     """
     score = 0.0
 
     # 1. NAME SIMILARITY (60%) - MOST IMPORTANT
-    name_score = _calculate_name_similarity(original, candidate)
-    score += name_score * 0.60
+    name_sim = _calculate_name_similarity_with_context(
+        original, candidate, all_products
+    )
+    score += name_sim * 0.60
 
     # 2. PRICE SIMILARITY (30%)
     if original.price and candidate.price and original.price > 0:
-        price_score = _calculate_price_similarity(original.price, candidate.price)
-        score += price_score * 0.30
+        price_sim = _calculate_price_similarity(original.price, candidate.price)
+        score += price_sim * 0.30
 
     # 3. MANUFACTURER MATCH (10%) - Nice bonus
     if (original.manufacturer_name and candidate.manufacturer_name and
@@ -72,22 +84,16 @@ def calculate_product_similarity(original: Product, candidate: Product) -> float
     return score
 
 
-def calculate_name_similarity_with_context(
+def _calculate_name_similarity_with_context(
     original: Product,
     candidate: Product,
     all_products: List[Product]
 ) -> float:
     """
-    Calculate name similarity using BM25 (Best Matching 25).
+    Calculate name similarity using BM25 algorithm with full corpus context.
 
-    BM25 is the industry-standard ranking function used by Elasticsearch,
-    Lucene, and major search engines. Provides 10-15% better accuracy than TF-IDF.
-
-    Key advantages:
-    - Saturation: Repeated words have diminishing returns (realistic!)
-    - Length normalization: Fair scoring for short vs long product names
-    - Higher weight for unique/rare words ("keto", "cookies")
-    - Lower weight for common words ("gluten-free", "mix")
+    Uses all products in the category to calculate proper IDF (Inverse Document
+    Frequency) scores, giving more weight to unique/rare words.
 
     Args:
         original: Product user subscribed to
@@ -144,30 +150,6 @@ def calculate_name_similarity_with_context(
     return similarity_primary
 
 
-def _calculate_name_similarity(original: Product, candidate: Product) -> float:
-    """
-    Simple fallback: Jaccard similarity (used when no context available).
-
-    For multi-language products, takes the best match across all languages.
-    """
-    # Tokenize primary names
-    orig_tokens_primary = _tokenize_product_name(original.name)
-    cand_tokens_primary = _tokenize_product_name(candidate.name)
-
-    similarity_primary = _jaccard_similarity(orig_tokens_primary, cand_tokens_primary)
-
-    # If secondary names available, check them too
-    if original.name_secondary and candidate.name_secondary:
-        orig_tokens_secondary = _tokenize_product_name(original.name_secondary)
-        cand_tokens_secondary = _tokenize_product_name(candidate.name_secondary)
-        similarity_secondary = _jaccard_similarity(orig_tokens_secondary, cand_tokens_secondary)
-
-        # Take best match across languages
-        return max(similarity_primary, similarity_secondary)
-
-    return similarity_primary
-
-
 def _tokenize_product_name(name: str) -> Set[str]:
     """
     Tokenize product name into meaningful keywords.
@@ -196,21 +178,6 @@ def _tokenize_product_name(name: str) -> Set[str]:
     }
 
     return tokens
-
-
-def _jaccard_similarity(set1: Set[str], set2: Set[str]) -> float:
-    """
-    Calculate Jaccard similarity coefficient between two token sets.
-
-    Formula: |intersection| / |union|
-    """
-    if not set1 or not set2:
-        return 0.0
-
-    intersection = set1 & set2
-    union = set1 | set2
-
-    return len(intersection) / len(union) if union else 0.0
 
 
 def _calculate_price_similarity(price1: float, price2: float) -> float:

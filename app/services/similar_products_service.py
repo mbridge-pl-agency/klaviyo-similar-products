@@ -6,7 +6,7 @@ from typing import List, Dict
 from datetime import datetime
 from app.adapters.base import EcommerceAdapter, Product
 from app.clients.klaviyo_client import KlaviyoClient
-from app.services.product_similarity import calculate_product_similarity, calculate_name_similarity_with_context
+from app.services.product_similarity import calculate_similarity_with_context
 from app.utils.logger import get_logger, log_with_context, hash_email
 
 logger = get_logger(__name__)
@@ -196,37 +196,15 @@ class SimilarProductsService:
                 in_stock_count=len(candidates)
             )
 
-            # Score each candidate using BM25 algorithm
+            # Score each candidate using comprehensive similarity algorithm
             scored = []
             for candidate in candidates:
-                # Calculate name similarity with BM25 (uses all candidates as corpus)
-                name_sim = calculate_name_similarity_with_context(
+                score = calculate_similarity_with_context(
                     original_product,
                     candidate,
                     all_products=candidates  # Full corpus for BM25 IDF calculation
                 )
-
-                # Calculate price similarity
-                price_sim = 0.0
-                if original_product.price and candidate.price and original_product.price > 0:
-                    price_diff_pct = abs(original_product.price - candidate.price) / original_product.price
-                    if price_diff_pct <= 0.20:
-                        price_sim = 1.0
-                    elif price_diff_pct <= 0.50:
-                        price_sim = 0.5
-                    else:
-                        price_sim = 0.2
-
-                # Manufacturer bonus
-                manufacturer_bonus = 0.0
-                if (original_product.manufacturer_name and candidate.manufacturer_name and
-                    original_product.manufacturer_name.lower() == candidate.manufacturer_name.lower()):
-                    manufacturer_bonus = 1.0
-
-                # Final score: 60% name + 30% price + 10% manufacturer
-                total_score = (name_sim * 0.60) + (price_sim * 0.30) + (manufacturer_bonus * 0.10)
-
-                scored.append((total_score, candidate))
+                scored.append((score, candidate))
 
             # Sort by score descending
             scored.sort(key=lambda x: x[0], reverse=True)
