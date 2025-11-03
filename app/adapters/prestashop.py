@@ -106,12 +106,13 @@ class PrestaShopAdapter(EcommerceAdapter):
             EcommerceAPIError: If API request fails
         """
         try:
-            # Step 1: Get product IDs from category
+            # Step 1: Get product IDs from category (only active products)
             url = f"{self.base_url}/api/products"
             params = {
                 "ws_key": self.api_key,
                 "output_format": "JSON",
                 "filter[id_category_default]": f"[{category_id}]",
+                "filter[active]": "[1]",
                 "limit": limit
             }
 
@@ -128,13 +129,14 @@ class PrestaShopAdapter(EcommerceAdapter):
             if not product_ids:
                 return []
 
-            # Step 2: Batch fetch product data
+            # Step 2: Batch fetch product data (only active products)
             ids_filter = "|".join(product_ids)
 
             params = {
                 "ws_key": self.api_key,
                 "output_format": "JSON",
                 "filter[id]": f"[{ids_filter}]",
+                "filter[active]": "[1]",
                 # Only fetch fields we need (reduces bandwidth)
                 "display": "[id,name,id_category_default,price,manufacturer_name]"
             }
